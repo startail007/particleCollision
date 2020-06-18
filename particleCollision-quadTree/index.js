@@ -1,3 +1,4 @@
+alert("asdasd");
 import { Particle } from "../js/particle.js";
 import { Rectangle, Quadtree } from "../js/quadtreeE.js";
 import { debounce, isPhone } from "../js/base.js";
