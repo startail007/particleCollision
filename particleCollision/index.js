@@ -19,7 +19,7 @@ canvas.addEventListener("mousemove", function (el) {
 window.addEventListener("mousemove", debounce(handleScroll));*/
 
 let particles = [];
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 400; i++) {
   let radius = 3 + Math.random() * 3;
   particles.push(
     new Particle(

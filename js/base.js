@@ -1,13 +1,13 @@
-let setShadow = function (ctx, offsetX, offsetY, blur, color) {
+const setShadow = function (ctx, offsetX, offsetY, blur, color) {
   ctx.shadowColor = color;
   ctx.shadowBlur = blur;
   ctx.shadowOffsetX = offsetX;
   ctx.shadowOffsetY = offsetY;
 };
-let clearShadow = function (ctx) {
+const clearShadow = function (ctx) {
   setShadow(ctx, 0, 0, 0, "rgba(0, 0, 0, 0)");
 };
-let numberCrop = function (value, min, max) {
+const numberCrop = function (value, min, max) {
   if (value <= min) {
     return min;
   }
@@ -16,19 +16,22 @@ let numberCrop = function (value, min, max) {
   }
   return value;
 };
-let debounce = function (func, delay = 250) {
+const debounce = function (func, delay = 250) {
   let timeout = null;
   return function () {
-    let context = this;
-    let args = arguments;
+    const context = this;
+    const args = arguments;
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       func.apply(context, args);
     }, delay);
   };
 };
-let randomSeedList = new Array(200);
+const randomSeedList = new Array(200);
 for (let i = 0, len = randomSeedList.length; i < len; i++) {
   randomSeedList[i] = 1 - 2 * Math.random();
 }
-export { setShadow, clearShadow, numberCrop, debounce, randomSeedList };
+const isPhone = function () {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+export { setShadow, clearShadow, numberCrop, debounce, randomSeedList, isPhone };

@@ -24,6 +24,20 @@ class Particle {
     this.collision = false;
     this.velocity0 = [0, 0];
   }
+  setVelocity(velocity = 10, direct = 0) {
+    this.velocity[0] = Math.cos(direct) * velocity;
+    this.velocity[1] = Math.sin(direct) * velocity;
+  }
+  setPos(x = 0, y = 0) {
+    this.pos[0] = x;
+    this.pos[1] = y;
+  }
+  setRadius(radius) {
+    this.radius = radius;
+  }
+  setMass(mass) {
+    this.mass = mass;
+  }
   update() {
     this.pos[0] += this.velocity[0];
     this.pos[1] += this.velocity[1];
