@@ -1,20 +1,21 @@
-import { Particle } from "../js/particle.js";
-import { Rectangle, Quadtree } from "../js/quadtreeE.js";
-import { debounce, isPhone } from "../js/base.js";
-let canvas, ctx, cWidth, cHeight;
-canvas = document.getElementById("canvas");
-ctx = canvas.getContext("2d");
-cWidth = canvas.width;
-cHeight = canvas.height;
+// import { Particle } from "../js/particle.js";
+// import { Rectangle, Quadtree } from "../js/quadtreeE.js";
+// import { debounce, isPhone } from "../js/base.js";
+// let canvas, ctx, cWidth, cHeight;
+// canvas = document.getElementById("canvas");
+// ctx = canvas.getContext("2d");
+// cWidth = canvas.width;
+// cHeight = canvas.height;
 
+alert("aaaaaaaaaaaaa");
 //let mPos = [0, 0];
-const isPC = !isPhone();
+//const isPC = !isPhone();
 
 /*canvas.addEventListener("mousemove", function (el) {
   mPos[0] = el.offsetX;
   mPos[1] = el.offsetY;
 });*/
-alert(isPC);
+//alert(isPC);
 
 /*let rect = new Rectangle(0, 0, cWidth, cHeight);
 let qtree = new Quadtree(rect, 10);
