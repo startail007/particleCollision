@@ -74,7 +74,7 @@ function update() {
   }
 }
 update();
-let oldTime = Date.now();
+/*let oldTime = Date.now();
 let animate = function () {
   requestAnimationFrame(animate);
   let nowTime = Date.now();
@@ -87,4 +87,4 @@ let animate = function () {
   ctx.fillStyle = "#ffffff";
   ctx.fillText((1 / delta).toFixed(1), 10, 10);
 };
-animate();
+animate();*/
