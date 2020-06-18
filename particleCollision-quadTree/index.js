@@ -1,4 +1,3 @@
-alert("asdasd");
 import { Particle } from "../js/particle.js";
 import { Rectangle, Quadtree } from "../js/quadtreeE.js";
 import { debounce, isPhone } from "../js/base.js";
@@ -8,17 +7,17 @@ ctx = canvas.getContext("2d");
 cWidth = canvas.width;
 cHeight = canvas.height;
 
-let mPos = [0, 0];
+//let mPos = [0, 0];
 const isPC = !isPhone();
 
 /*canvas.addEventListener("mousemove", function (el) {
   mPos[0] = el.offsetX;
   mPos[1] = el.offsetY;
 });*/
+alert(isPC);
 
-let rect = new Rectangle(0, 0, cWidth, cHeight);
+/*let rect = new Rectangle(0, 0, cWidth, cHeight);
 let qtree = new Quadtree(rect, 10);
-alert(qtree);
 
 const radius_min = isPC ? 5 : 6;
 const radius_max = isPC ? 10 : 12;
@@ -75,7 +74,7 @@ function update() {
     particles[i].render(ctx);
   }
 }
-update();
+update();*/
 /*let oldTime = Date.now();
 let animate = function () {
   requestAnimationFrame(animate);
