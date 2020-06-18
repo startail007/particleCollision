@@ -1,5 +1,5 @@
-import { Point } from "./point.js";
 import { Vector, VectorE } from "./vector.js";
+import { Point } from "./point.js";
 class Particle {
   constructor(color = "#000000", pos = [0, 0], velocity = 10, direct = 0, radius = 10, mass = 1) {
     this.options = {

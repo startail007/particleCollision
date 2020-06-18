@@ -15,9 +15,9 @@ class Point {
   static addVector(pos, vector) {
     return [pos[0] + vector[0], pos[1] + vector[1]];
   }
-  static distance = function (pos0, pos1) {
+  static distance(pos0, pos1) {
     return Vector.length(Point.getVector(pos0, pos1));
-  };
+  }
 }
 
 let getQuadraticCurveTo = function (p0, p1, p2, t) {
