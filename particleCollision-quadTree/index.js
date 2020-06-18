@@ -7,7 +7,7 @@ ctx = canvas.getContext("2d");
 cWidth = canvas.width;
 cHeight = canvas.height;
 
-let mPos = [0, 0];
+//let mPos = [0, 0];
 const isPC = !isPhone();
 
 /*canvas.addEventListener("mousemove", function (el) {
@@ -21,7 +21,7 @@ let qtree = new Quadtree(rect, 10);
 const radius_min = isPC ? 5 : 6;
 const radius_max = isPC ? 10 : 12;
 const particles = [];
-for (let i = 0; i < (isPC ? 2000 : 2000); i++) {
+for (let i = 0; i < (isPC ? 2000 : 1000); i++) {
   particles.push(new Particle(`hsl(${Math.floor(360 * Math.random())},100%,50%)`));
 }
 function handleResize() {

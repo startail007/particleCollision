@@ -1,4 +1,5 @@
 import { Particle } from "../js/particle.js";
+import { isPhone } from "../js/base.js";
 
 let canvas, ctx, cWidth, cHeight;
 canvas = document.getElementById("canvas");
@@ -6,12 +7,13 @@ ctx = canvas.getContext("2d");
 cWidth = canvas.width;
 cHeight = canvas.height;
 
-let mPos = [0, 0];
+//let mPos = [0, 0];
+const isPC = !isPhone();
 
-canvas.addEventListener("mousemove", function (el) {
+/*canvas.addEventListener("mousemove", function (el) {
   mPos[0] = el.clientX;
   mPos[1] = el.clientY;
-});
+});*/
 
 /*function handleScroll() {
   console.log("aaa");
@@ -19,7 +21,7 @@ canvas.addEventListener("mousemove", function (el) {
 window.addEventListener("mousemove", debounce(handleScroll));*/
 
 let particles = [];
-for (let i = 0; i < 400; i++) {
+for (let i = 0; i < (isPC ? 2000 : 1000); i++) {
   let radius = 3 + Math.random() * 3;
   particles.push(
     new Particle(
