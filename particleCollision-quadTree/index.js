@@ -7,7 +7,7 @@ ctx = canvas.getContext("2d");
 cWidth = canvas.width;
 cHeight = canvas.height;
 
-alert("nnnnnnnnnnnn");
+alert("nnnnnnnnnnnn0");
 //let mPos = [0, 0];
 //const isPC = !isPhone();
 
