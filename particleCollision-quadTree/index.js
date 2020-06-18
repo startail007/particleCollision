@@ -17,6 +17,7 @@ const isPC = !isPhone();
 
 let rect = new Rectangle(0, 0, cWidth, cHeight);
 let qtree = new Quadtree(rect, 10);
+alert(qtree);
 
 const radius_min = isPC ? 5 : 6;
 const radius_max = isPC ? 10 : 12;
