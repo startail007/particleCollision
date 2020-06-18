@@ -1,4 +1,4 @@
-//import { Particle } from "../js/particle.js";
+import { Particle } from "../js/particle.js";
 import { Rectangle, Quadtree } from "../js/quadtreeE.js";
 //import { debounce, isPhone } from "../js/base.js";
 let canvas, ctx, cWidth, cHeight;
@@ -7,7 +7,7 @@ ctx = canvas.getContext("2d");
 cWidth = canvas.width;
 cHeight = canvas.height;
 
-alert("nnnnnnnnnnnn2");
+alert("nnnnnnnnnnnn3");
 //let mPos = [0, 0];
 //const isPC = !isPhone();
 

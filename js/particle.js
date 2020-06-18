@@ -1,13 +1,12 @@
 import { Point } from "./point.js";
 import { Vector, VectorE } from "./vector.js";
 class Particle {
-  constructor(color = "#000000", pos = [0, 0], velocity = 10, direct = 0 /*, friction = 0.94*/, radius = 10, mass = 1) {
+  constructor(color = "#000000", pos = [0, 0], velocity = 10, direct = 0, radius = 10, mass = 1) {
     this.options = {
       color,
       pos,
       velocity,
       direct,
-      /*friction,*/
       radius,
       mass,
     };
@@ -24,7 +23,7 @@ class Particle {
     this.collision = false;
     this.velocity0 = [0, 0];
   }
-  setVelocity(velocity = 10, direct = 0) {
+  /*setVelocity(velocity = 10, direct = 0) {
     this.velocity[0] = Math.cos(direct) * velocity;
     this.velocity[1] = Math.sin(direct) * velocity;
   }
@@ -41,46 +40,26 @@ class Particle {
   update() {
     this.pos[0] += this.velocity[0];
     this.pos[1] += this.velocity[1];
-    //this.velocity[1] += 0.1;
-    /*this.velocity[0] *= 0.99;
-    this.velocity[1] *= 0.99;*/
   }
   render(ctx) {
-    //ctx.strokeStyle = "#000000";
-    ctx.fillStyle = this.options.color; //this.collision ? "#ff0000" : "#00ff00";
+    ctx.fillStyle = this.options.color;
     ctx.beginPath();
     ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI);
-    //ctx.fillRect(this.pos[0] - this.radius * 0.5, this.pos[1] - this.radius * 0.5, this.radius, this.radius);
     ctx.fill();
-    //ctx.stroke();
-
-    /*ctx.strokeStyle = "#0000ff";
-    ctx.beginPath();
-    ctx.moveTo(this.pos[0], this.pos[1]);
-    ctx.lineTo(this.pos[0] + this.velocity[0], this.pos[1] + this.velocity[1]);
-    ctx.stroke();*/
   }
 
   boundaryCheck(width, height) {
-    //this.velocity0[0] = 0;
-    //this.velocity0[1] = 0;
     if (this.pos[0] - this.radius < 0 && this.velocity[0] < 0) {
       this.velocity[0] *= -1;
-      //this.velocity0[0] += (0 + this.radius - this.pos[0]) * 0.5;
       this.pos[0] = 0 + this.radius;
     } else if (this.pos[0] + this.radius > width && this.velocity[0] > 0) {
       this.velocity[0] *= -1;
-      //this.velocity0[0] += (width - this.radius - this.pos[0]) * 0.5;
       this.pos[0] = width - this.radius;
     } else if (this.pos[1] - this.radius < 0 && this.velocity[1] < 0) {
       this.velocity[1] *= -1;
-      //this.velocity0[1] += (0 + this.radius - this.pos[1]) * 0.5;
-      //this.velocity0[1] -= 0.1;
       this.pos[1] = 0 + this.radius;
     } else if (this.pos[1] + this.radius > height && this.velocity[1] > 0) {
       this.velocity[1] *= -1;
-      //this.velocity0[1] += (height - this.radius - this.pos[1]) * 0.5;
-      //this.velocity0[1] -= 0.1;
       this.pos[1] = height - this.radius;
     }
   }
@@ -108,21 +87,11 @@ class Particle {
         VectorE.add(pos, move1);
         VectorE.add(otherPos, move2);
 
-        /*VectorE.scale(move1, 2);
-        VectorE.scale(move2, 2);*/
-
-        /*VectorE.add(this.velocity, move1);
-        VectorE.add(ele.velocity, move2);
-        VectorE.add(ele.velocity, this.velocity0);*/
-
         let velocityDiff = Vector.sub(this.velocity, ele.velocity);
 
         if (Vector.dot(velocityDiff, dir1) >= 0) {
           let force1 = Vector.projection(this.velocity, dir1);
           let force2 = Vector.projection(ele.velocity, dir2);
-
-          /*VectorE.scale(force1, 0.3);
-          VectorE.scale(force2, 0.3);*/
 
           VectorE.sub(this.velocity, force1);
           VectorE.sub(ele.velocity, force2);
@@ -130,14 +99,11 @@ class Particle {
           let v1 = Vector.collisionCalc(force1, force2, this.mass, ele.mass);
           let v2 = Vector.collisionCalc(force2, force1, ele.mass, this.mass);
 
-          /*VectorE.scale(v1, 0.7);
-          VectorE.scale(v2, 0.7);*/
-
           VectorE.add(this.velocity, v1);
           VectorE.add(ele.velocity, v2);
         }
       }
     }
-  }
+  }*/
 }
 export { Particle };
