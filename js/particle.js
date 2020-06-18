@@ -1,5 +1,5 @@
-import { Vector, VectorE } from "./vector.js";
 import { Point } from "./point.js";
+import { Vector, VectorE } from "./vector.js";
 class Particle {
   constructor(color = "#000000", pos = [0, 0], velocity = 10, direct = 0, radius = 10, mass = 1) {
     this.options = {
@@ -23,7 +23,7 @@ class Particle {
     this.collision = false;
     this.velocity0 = [0, 0];
   }
-  /*setVelocity(velocity = 10, direct = 0) {
+  setVelocity(velocity = 10, direct = 0) {
     this.velocity[0] = Math.cos(direct) * velocity;
     this.velocity[1] = Math.sin(direct) * velocity;
   }
@@ -104,6 +104,6 @@ class Particle {
         }
       }
     }
-  }*/
+  }
 }
 export { Particle };
