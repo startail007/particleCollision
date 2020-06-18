@@ -21,7 +21,7 @@ let qtree = new Quadtree(rect, 10);
 const radius_min = isPC ? 5 : 6;
 const radius_max = isPC ? 10 : 12;
 const particles = [];
-for (let i = 0; i < (isPC ? 2000 : 100); i++) {
+for (let i = 0; i < (isPC ? 2000 : 2000); i++) {
   particles.push(new Particle(`hsl(${Math.floor(360 * Math.random())},100%,50%)`));
 }
 function handleResize() {
