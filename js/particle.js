@@ -27,6 +27,10 @@ class Particle {
     this.velocity[0] = Math.cos(direct) * velocity;
     this.velocity[1] = Math.sin(direct) * velocity;
   }
+  addVelocity(velocity = 10, direct = 0) {
+    this.velocity[0] += Math.cos(direct) * velocity;
+    this.velocity[1] += Math.sin(direct) * velocity;
+  }
   setPos(x = 0, y = 0) {
     this.pos[0] = x;
     this.pos[1] = y;
@@ -43,6 +47,7 @@ class Particle {
   }
   render(ctx) {
     ctx.fillStyle = this.options.color;
+    //ctx.fillStyle = `hsl(0,${Math.min(Vector.length(this.velocity) / 0.04, 100)}%,50%)`;
     ctx.beginPath();
     ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI);
     ctx.fill();
@@ -65,39 +70,39 @@ class Particle {
   }
   collisionCheck(particles) {
     for (let i = 0; i < particles.length; i++) {
-      let ele = particles[i];
+      const ele = particles[i];
       if (this === ele) {
         return;
       }
-      let pos = this.pos;
-      let otherPos = ele.pos;
-      let r = Point.distance(pos, otherPos);
+      const pos = this.pos;
+      const otherPos = ele.pos;
+      const r = Point.distance(pos, otherPos);
       if (r > 0 && r < this.radius + ele.radius) {
-        let dir1 = Point.getVector(pos, otherPos);
+        const dir1 = Point.getVector(pos, otherPos);
         VectorE.scale(dir1, this.radius / r);
-        let dir2 = Point.getVector(otherPos, pos);
+        const dir2 = Point.getVector(otherPos, pos);
         VectorE.scale(dir2, ele.radius / r);
-        let c = Point.toPosRate(pos, otherPos, this.radius / (this.radius + ele.radius));
+        const c = Point.toPosRate(pos, otherPos, this.radius / (this.radius + ele.radius));
 
-        let move1 = Point.getVector(Point.addVector(pos, dir1), c);
+        const move1 = Point.getVector(Point.addVector(pos, dir1), c);
         VectorE.scale(move1, 0.5);
-        let move2 = Point.getVector(Point.addVector(otherPos, dir2), c);
+        const move2 = Point.getVector(Point.addVector(otherPos, dir2), c);
         VectorE.scale(move2, 0.5);
 
         VectorE.add(pos, move1);
         VectorE.add(otherPos, move2);
 
-        let velocityDiff = Vector.sub(this.velocity, ele.velocity);
+        const velocityDiff = Vector.sub(this.velocity, ele.velocity);
 
         if (Vector.dot(velocityDiff, dir1) >= 0) {
-          let force1 = Vector.projection(this.velocity, dir1);
-          let force2 = Vector.projection(ele.velocity, dir2);
+          const force1 = Vector.projection(this.velocity, dir1);
+          const force2 = Vector.projection(ele.velocity, dir2);
 
           VectorE.sub(this.velocity, force1);
           VectorE.sub(ele.velocity, force2);
 
-          let v1 = Vector.collisionCalc(force1, force2, this.mass, ele.mass);
-          let v2 = Vector.collisionCalc(force2, force1, ele.mass, this.mass);
+          const v1 = Vector.collisionCalc(force1, force2, this.mass, ele.mass);
+          const v2 = Vector.collisionCalc(force2, force1, ele.mass, this.mass);
 
           VectorE.add(this.velocity, v1);
           VectorE.add(ele.velocity, v2);

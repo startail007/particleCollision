@@ -20,14 +20,14 @@ class Point {
   }
 }
 
-let getQuadraticCurveTo = function (p0, p1, p2, t) {
-  let x = p0[0] * (1 - t) * (1 - t) + 2 * p1[0] * (1 - t) * t + p2[0] * t * t;
-  let y = p0[1] * (1 - t) * (1 - t) + 2 * p1[1] * (1 - t) * t + p2[1] * t * t;
+const getQuadraticCurveTo = function (p0, p1, p2, t) {
+  const x = p0[0] * (1 - t) * (1 - t) + 2 * p1[0] * (1 - t) * t + p2[0] * t * t;
+  const y = p0[1] * (1 - t) * (1 - t) + 2 * p1[1] * (1 - t) * t + p2[1] * t * t;
   return [x, y];
 };
-let getQuadraticCurveToTangent = function (p0, p1, p2, t) {
-  let x = 2 * t * (p0[0] - p1[0] * 2 + p2[0]) + 2 * (-p0[0] + p1[0]);
-  let y = 2 * t * (p0[1] - p1[1] * 2 + p2[1]) + 2 * (-p0[1] + p1[1]);
+const getQuadraticCurveToTangent = function (p0, p1, p2, t) {
+  const x = 2 * t * (p0[0] - p1[0] * 2 + p2[0]) + 2 * (-p0[0] + p1[0]);
+  const y = 2 * t * (p0[1] - p1[1] * 2 + p2[1]) + 2 * (-p0[1] + p1[1]);
   return [x, y];
 };
 export { getQuadraticCurveTo, getQuadraticCurveToTangent, Point };

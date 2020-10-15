@@ -1,19 +1,15 @@
 import { Particle } from "../js/particle.js";
 import { Rectangle, Quadtree } from "../js/quadtreeE.js";
 import { debounce, isPhone } from "../js/base.js";
-let canvas, ctx, cWidth, cHeight;
-canvas = document.getElementById("canvas");
-ctx = canvas.getContext("2d");
-cWidth = canvas.width;
-cHeight = canvas.height;
+import { Point } from "../js/point.js";
+import { Vector } from "../js/vector.js";
 
-//let mPos = [0, 0];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let cWidth = canvas.width;
+let cHeight = canvas.height;
+
 const isPC = !isPhone();
-
-/*canvas.addEventListener("mousemove", function (el) {
-  mPos[0] = el.offsetX;
-  mPos[1] = el.offsetY;
-});*/
 
 let rect = new Rectangle(0, 0, cWidth, cHeight);
 let qtree = new Quadtree(rect, 10);
@@ -21,7 +17,7 @@ let qtree = new Quadtree(rect, 10);
 const radius_min = 5;
 const radius_max = 10;
 let particles;
-function handleResize() {
+const handleResize = () => {
   canvas.width = cWidth = window.innerWidth;
   canvas.height = cHeight = window.innerHeight;
   rect = new Rectangle(0, 0, cWidth, cHeight);
@@ -39,10 +35,25 @@ function handleResize() {
     particles[i].setRadius(radius);
     particles[i].setMass(radius / radius_min);
   }
-}
+};
 window.addEventListener("resize", debounce(handleResize));
 handleResize();
-function update() {
+canvas.addEventListener("click", (el) => {
+  const p = [el.pageX, el.pageY];
+  const r = 100;
+  const range = new Rectangle(p[0] - r, p[1] - r, r * 2, r * 2);
+  const query_points = qtree.query(range);
+
+  query_points.forEach((el) => {
+    const v = Vector.sub(el.point, p);
+    const r0 = Vector.length(v);
+    if (r0 <= r) {
+      particles[el.key].addVelocity(Math.min(r0 ? (10 * r) / r0 : 0, 10), Math.atan2(v[1], v[0]));
+      particles[el.key].setRadius(particles[el.key].radius);
+    }
+  });
+});
+const update = () => {
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, cWidth, cHeight);
 
@@ -57,11 +68,11 @@ function update() {
     qtree.insert({ key: i, point: particles[i].pos });
   }
   for (let i = 0; i < particles.length; i++) {
-    let query_particles = [];
-    let w = particles[i].radius + radius_max;
-    let h = particles[i].radius + radius_max;
-    let range = new Rectangle(particles[i].pos[0] - w, particles[i].pos[1] - h, w * 2, h * 2);
-    let query_points = qtree.query(range);
+    const query_particles = [];
+    const w = particles[i].radius + radius_max;
+    const h = particles[i].radius + radius_max;
+    const range = new Rectangle(particles[i].pos[0] - w, particles[i].pos[1] - h, w * 2, h * 2);
+    const query_points = qtree.query(range);
     for (let j = 0; j < query_points.length; j++) {
       query_particles.push(particles[query_points[j].key]);
     }
@@ -71,13 +82,13 @@ function update() {
   for (let i = 0; i < particles.length; i++) {
     particles[i].render(ctx);
   }
-}
+};
 update();
 let oldTime = Date.now();
-let animate = function () {
+const animate = () => {
   requestAnimationFrame(animate);
-  let nowTime = Date.now();
-  let delta = (nowTime - oldTime) / 1000;
+  const nowTime = Date.now();
+  const delta = (nowTime - oldTime) / 1000;
   oldTime = nowTime;
   update();
   ctx.font = "18px Noto Sans TC";
