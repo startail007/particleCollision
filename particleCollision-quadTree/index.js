@@ -20,18 +20,20 @@ let qtree = new Quadtree(rect, 10);
 
 const radius_min = isPC ? 5 : 6;
 const radius_max = isPC ? 10 : 12;
-const particles = [];
-for (let i = 0; i < (isPC ? 2000 : 1000); i++) {
+let particles;
+/*for (let i = 0; i < (isPC ? 2000 : 1000); i++) {
   particles.push(new Particle(`hsl(${Math.floor(360 * Math.random())},100%,50%)`));
-}
+}*/
 function handleResize() {
   canvas.width = cWidth = window.innerWidth;
   canvas.height = cHeight = window.innerHeight;
   rect = new Rectangle(0, 0, cWidth, cHeight);
   qtree = new Quadtree(rect, 10);
+  particles = new Array(Math.ceil(((isPC ? 1 : 0.5) * (cWidth * cHeight)) / 1000));
   //console.log(window.innerHeight);
   for (let i = 0; i < particles.length; i++) {
     const radius = radius_min + Math.random() * (radius_max - radius_min);
+    particles[i] = new Particle(`hsl(${Math.floor(360 * Math.random())},100%,50%)`);
     particles[i].setPos(
       radius + (cWidth - 2 * radius) * Math.random(),
       radius + (cHeight - 2 * radius) * Math.random()
