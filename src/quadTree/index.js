@@ -1,4 +1,4 @@
-import { Rectangle, Quadtree } from "../js/quadtreeE.js";
+import { Rectangle, Quadtree } from "../js/quadtree.js";
 let canvas, ctx, cWidth, cHeight;
 canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
@@ -87,7 +87,7 @@ function update() {
   ctx.strokeStyle = "#00ff00";
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.strokeRect(range.x, range.y, range.w, range.h);
+  ctx.strokeRect(range.x, range.y, range.width, range.height);
   ctx.stroke();
   ctx.restore();
 }

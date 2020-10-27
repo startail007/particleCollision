@@ -1,15 +1,12 @@
 import { Particle } from "../js/particle.js";
-import { Rectangle, Quadtree } from "../js/quadtreeE.js";
-import { debounce, isPhone } from "../js/base.js";
-import { Point } from "../js/point.js";
+import { Rectangle, Quadtree } from "../js/quadtree.js";
+import { debounce } from "../js/base.js";
 import { Vector } from "../js/vector.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let cWidth = canvas.width;
 let cHeight = canvas.height;
-
-const isPC = !isPhone();
 
 let rect = new Rectangle(0, 0, cWidth, cHeight);
 let qtree = new Quadtree(rect, 10);
@@ -20,8 +17,9 @@ let particles;
 const handleResize = () => {
   canvas.width = cWidth = window.innerWidth;
   canvas.height = cHeight = window.innerHeight;
-  rect = new Rectangle(0, 0, cWidth, cHeight);
-  qtree = new Quadtree(rect, 10);
+  rect.width = cWidth;
+  rect.height = cHeight;
+  qtree.reset(rect, 10);
   particles = new Array(Math.ceil((cWidth * cHeight) / 1000));
   //console.log(window.innerHeight);
   for (let i = 0; i < particles.length; i++) {
@@ -67,6 +65,7 @@ const update = () => {
   for (let i = 0; i < particles.length; i++) {
     qtree.insert({ key: i, point: particles[i].pos });
   }
+
   for (let i = 0; i < particles.length; i++) {
     const query_particles = [];
     const w = particles[i].radius + radius_max;
@@ -82,6 +81,7 @@ const update = () => {
   for (let i = 0; i < particles.length; i++) {
     particles[i].render(ctx);
   }
+  //qtree.render(ctx);
 };
 update();
 let oldTime = Date.now();
