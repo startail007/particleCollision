@@ -1,7 +1,7 @@
 # 粒子碰撞
 
-[1.粒子碰撞](https://virtools.github.io/particleCollision/particleCollision/)
+[1.粒子碰撞](https://virtools.github.io/particleCollision/dist/particleCollision/)
 
-[2.四元樹](https://virtools.github.io/particleCollision/quadTree/)
+[2.四元樹](https://virtools.github.io/particleCollision/dist/quadTree/)
 
-[3.粒子碰撞+四元樹](https://virtools.github.io/particleCollision/particleCollision-quadTree/)
+[3.粒子碰撞+四元樹](https://virtools.github.io/particleCollision/dist/particleCollision-quadTree/)
