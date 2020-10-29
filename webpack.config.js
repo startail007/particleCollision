@@ -141,6 +141,8 @@ module.exports = {
       title: "粒子碰撞",
       template: "./src/index.html",
       filename: "index.html",
+      hash: true,
+      chunks: [],
     }),
     new HtmlWebpackPlugin({
       title: "particleCollision",
