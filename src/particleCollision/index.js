@@ -23,16 +23,16 @@ window.addEventListener("mousemove", debounce(handleScroll));*/
 let particles = [];
 for (let i = 0; i < (isPC ? 2000 : 1000); i++) {
   let radius = 3 + Math.random() * 3;
-  particles.push(
-    new Particle(
-      `hsl(${Math.floor(360 * Math.random())},100%,50%)`,
-      //"#ffffff",
-      [radius + (cWidth - 2 * radius) * Math.random(), radius + (cHeight - 2 * radius) * Math.random()],
-      2,
-      2 * Math.PI * Math.random(),
-      radius
-    )
-  );
+  const particle = new Particle({
+    color: `hsl(${Math.floor(360 * Math.random())},100%,50%)`,
+    pos: [radius + (cWidth - 2 * radius) * Math.random(), radius + (cHeight - 2 * radius) * Math.random()],
+    radius,
+    restitution: 1,
+  });
+  const vel = 25;
+  const angel = 2 * Math.PI * Math.random();
+  particle.linearVel = [Math.cos(angel) * vel, Math.sin(angel) * vel];
+  particles.push(particle);
 }
 //particles.push(new Particle("#ff0000", [250, 250], 10, 0.5 * Math.PI, 80));
 //particles.push(new Particle("#00ff00", [300, 300], 20, 0.5 * Math.PI, 100));
@@ -45,23 +45,27 @@ particles.push(new Particle("#0000ff", [400, 300], 0, 0 * Math.PI, 30));*/
 //particles.push(new Particle("#ff0000", [290, 300], 5, 0 * Math.PI, 20));
 //particles.push(new Particle("#00ff00", [300, 300], 2, 0 * Math.PI, 20));
 
-function update() {
+function update(delta) {
   //ctx.clearRect(0, 0, cWidth, cHeight);
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, cWidth, cHeight);
 
-  /*particles.forEach((ele, i, ary) => {
-    ele.update();
-  });*/
   for (let i = 0; i < particles.length; i++) {
-    particles[i].update();
+    particles[i].update(0.1);
   }
   for (let i = 0; i < particles.length; i++) {
-    particles[i].collisionCheck(particles);
+    const particleA = particles[i];
+    for (let j = 0; j < particles.length; j++) {
+      if (i === j) continue;
+      const particleB = particles[j];
+      Particle.collide(particleA, particleB);
+    }
   }
-  for (let i = 0; i < particles.length; i++) {
-    particles[i].boundaryCheck(cWidth, cHeight);
-  }
+  const wellRestitution = 1;
+  Particle.constraint(particles, [cWidth, 0], [0, 0], wellRestitution);
+  Particle.constraint(particles, [0, cHeight], [cWidth, cHeight], wellRestitution);
+  Particle.constraint(particles, [0, 0], [0, cHeight], wellRestitution);
+  Particle.constraint(particles, [cWidth, cHeight], [cWidth, 0], wellRestitution);
   /*particles.forEach((ele, i, ary) => {
     ele.collisionCheck(ary);
   });
@@ -75,25 +79,16 @@ function update() {
   }
   //ctx.restore();
 }
-update();
-let oldTime = Date.now();
-//let count = 0;
-let animate = function () {
+let oldTime = 0;
+let animate = function (t) {
   requestAnimationFrame(animate);
-  let nowTime = Date.now();
-  let delta = (nowTime - oldTime) / 1000;
-  oldTime = nowTime;
-  //console.log(1 / delta);
-
-  /*count += delta;
-  if (count >= 0.033) {
-    count %= 0.033;*/
-  update();
-  //}
+  const delta = Math.min(Math.max((t - oldTime) / 1000, 0.01), 0.05);
+  oldTime = t;
+  update(delta);
   ctx.font = "18px Noto Sans TC";
   ctx.textAlign = "start";
   ctx.textBaseline = "hanging";
   ctx.fillStyle = "#ffffff";
   ctx.fillText((1 / delta).toFixed(1), 10, 10);
 };
-animate();
+requestAnimationFrame(animate);

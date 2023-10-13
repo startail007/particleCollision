@@ -1,4 +1,10 @@
-class Vector {
+export class Vector {
+  static zero() {
+    return [0, 0];
+  }
+  static clone(vector) {
+    return [...vector];
+  }
   static rotate(vector, angle) {
     let cos0 = Math.cos(angle);
     let sin0 = Math.sin(angle);
@@ -32,8 +38,27 @@ class Vector {
       1 / (mass1 + mass2)
     );
   }
+  static distance(vector0, vector1) {
+    return Vector.length(Vector.sub(vector0, vector1));
+  }
+  static normalize(vector) {
+    const len = Vector.length(vector);
+    if (len) return Vector.scale(vector, 1 / len);
+    return Vector.clone(vector);
+  }
+  static normal(vector) {
+    return [-vector[1], vector[0]];
+  }
+  static negate(vector) {
+    return [-vector[0], -vector[1]];
+  }
 }
-class VectorE {
+export class VectorE {
+  static set(vector0, vector1) {
+    vector0[0] = vector1[0];
+    vector0[1] = vector1[1];
+    return vector0;
+  }
   static add(vector0, vector1) {
     vector0[0] += vector1[0];
     vector0[1] += vector1[1];
@@ -50,4 +75,3 @@ class VectorE {
     return vector;
   }
 }
-export { Vector, VectorE };

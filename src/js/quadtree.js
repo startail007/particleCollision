@@ -1,4 +1,4 @@
-class Rectangle {
+export class Rectangle {
   constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
@@ -19,8 +19,20 @@ class Rectangle {
       rect.y + rect.height < this.y
     );
   }
+  get left() {
+    return this.x;
+  }
+  get right() {
+    return this.x + this.width;
+  }
+  get top() {
+    return this.y;
+  }
+  get bottom() {
+    return this.y + this.height;
+  }
 }
-class Quadtree {
+export class Quadtree {
   constructor(boundary, minRange = 1, maxPoints = 4, maxLevel = 5, level = 0) {
     this.corner = ["northwest", "northeast", "southeast", "southwest"];
     this.reset(boundary, minRange, maxPoints, maxLevel, level);
@@ -111,6 +123,9 @@ class Quadtree {
     }
     return found;
   }
+  queryAndMap(range, list) {
+    return this.query(range).map((query_point) => list[query_point.key]);
+  }
   clear() {
     this.points = [];
     if (this.divided) {
@@ -134,4 +149,3 @@ class Quadtree {
     }
   }
 }
-export { Rectangle, Quadtree };

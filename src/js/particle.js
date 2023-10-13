@@ -1,114 +1,75 @@
-import { Point } from "./point.js";
+import { Line } from "./Line.js";
+import { Collisions } from "./collisions.js";
 import { Vector, VectorE } from "./vector.js";
-class Particle {
-  constructor(color = "#000000", pos = [0, 0], velocity = 10, direct = 0, radius = 10, mass = 1) {
-    this.options = {
-      color,
-      pos,
-      velocity,
-      direct,
-      radius,
-      mass,
-    };
-    this.init();
-  }
-  init() {
-    this.pos = this.options.pos.slice();
-    this.velocity = [
-      Math.cos(this.options.direct) * this.options.velocity,
-      Math.sin(this.options.direct) * this.options.velocity,
-    ];
-    this.radius = this.options.radius;
-    this.mass = this.options.mass;
-    this.collision = false;
-    this.velocity0 = [0, 0];
-  }
-  setVelocity(velocity = 10, direct = 0) {
-    this.velocity[0] = Math.cos(direct) * velocity;
-    this.velocity[1] = Math.sin(direct) * velocity;
-  }
-  addVelocity(velocity = 10, direct = 0) {
-    this.velocity[0] += Math.cos(direct) * velocity;
-    this.velocity[1] += Math.sin(direct) * velocity;
-  }
-  setPos(x = 0, y = 0) {
-    this.pos[0] = x;
-    this.pos[1] = y;
-  }
-  setRadius(radius) {
+export class Particle {
+  constructor({ color = "#000000", pos = [0, 0], radius = 10, density = 1, restitution = 1 }) {
+    this.color = color;
+    this.pos = Vector.clone(pos);
+    this.linearVel = Vector.zero();
+    this.density = density;
     this.radius = radius;
+    this.area = this.radius * this.radius * Math.PI;
+    this.mass = this.density * this.area;
+    this.invMass = this.mass ? 1 / this.mass : 0;
+    this.restitution = restitution;
+    this.force = Vector.zero();
   }
-  setMass(mass) {
-    this.mass = mass;
-  }
-  update() {
-    this.pos[0] += this.velocity[0];
-    this.pos[1] += this.velocity[1];
+  update(dt) {
+    VectorE.add(this.linearVel, Vector.scale(this.force, dt));
+    VectorE.add(this.pos, Vector.scale(this.linearVel, dt));
+    this.force = Vector.zero();
   }
   render(ctx) {
-    ctx.fillStyle = this.options.color;
-    //ctx.fillStyle = `hsl(0,${Math.min(Vector.length(this.velocity) / 0.04, 100)}%,50%)`;
+    ctx.fillStyle = this.color;
+    //ctx.fillStyle = `hsl(0,${Math.min(Vector.length(this.linearVel) / 0.04, 100)}%,50%)`;
     ctx.beginPath();
-    ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI);
+    ctx.arc(...this.pos, this.radius, 0, 2 * Math.PI);
     ctx.fill();
   }
-
-  boundaryCheck(width, height) {
-    if (this.pos[0] - this.radius < 0 && this.velocity[0] < 0) {
-      this.velocity[0] *= -1;
-      this.pos[0] = 0 + this.radius;
-    } else if (this.pos[0] + this.radius > width && this.velocity[0] > 0) {
-      this.velocity[0] *= -1;
-      this.pos[0] = width - this.radius;
-    } else if (this.pos[1] - this.radius < 0 && this.velocity[1] < 0) {
-      this.velocity[1] *= -1;
-      this.pos[1] = 0 + this.radius;
-    } else if (this.pos[1] + this.radius > height && this.velocity[1] > 0) {
-      this.velocity[1] *= -1;
-      this.pos[1] = height - this.radius;
-    }
+  static constraint(particles, p0, p1, wellRestitution) {
+    const v = Vector.sub(p1, p0);
+    const normal = Vector.normal(Vector.normalize(v));
+    particles.forEach((particle) => {
+      const v0 = Vector.sub(particle.pos, p0);
+      const dist = Vector.cross(v0, v) / Vector.length(v) - particle.radius;
+      if (dist < 0) {
+        VectorE.sub(particle.pos, Vector.scale(normal, Math.abs(dist)));
+        const impulse = Collisions.resolveCollisionBasic(
+          particle.linearVel,
+          Vector.zero(),
+          particle.invMass,
+          0,
+          Math.min(particle.restitution, wellRestitution),
+          normal
+        );
+        if (!impulse) return;
+        VectorE.sub(particle.linearVel, Vector.scale(impulse, particle.invMass));
+      }
+    });
   }
-  collisionCheck(particles) {
-    for (let i = 0; i < particles.length; i++) {
-      const ele = particles[i];
-      if (this === ele) {
-        return;
-      }
-      const pos = this.pos;
-      const otherPos = ele.pos;
-      const r = Point.distance(pos, otherPos);
-      if (r > 0 && r < this.radius + ele.radius) {
-        const dir1 = Point.getVector(pos, otherPos);
-        VectorE.scale(dir1, this.radius / r);
-        const dir2 = Point.getVector(otherPos, pos);
-        VectorE.scale(dir2, ele.radius / r);
-        const c = Point.toPosRate(pos, otherPos, this.radius / (this.radius + ele.radius));
+  addForce(amount) {
+    this.force = amount;
+  }
+  static collide(bodyA, bodyB) {
+    const info = Collisions.intersectCircles(bodyA.pos, bodyA.radius, bodyB.pos, bodyB.radius);
+    if (!info) return;
+    const { normal, depth } = info;
 
-        const move1 = Point.getVector(Point.addVector(pos, dir1), c);
-        VectorE.scale(move1, 0.5);
-        const move2 = Point.getVector(Point.addVector(otherPos, dir2), c);
-        VectorE.scale(move2, 0.5);
+    const mtv = Vector.scale(normal, depth * 0.5);
+    VectorE.sub(bodyA.pos, mtv);
+    VectorE.add(bodyB.pos, mtv);
 
-        VectorE.add(pos, move1);
-        VectorE.add(otherPos, move2);
-
-        const velocityDiff = Vector.sub(this.velocity, ele.velocity);
-
-        if (Vector.dot(velocityDiff, dir1) >= 0) {
-          const force1 = Vector.projection(this.velocity, dir1);
-          const force2 = Vector.projection(ele.velocity, dir2);
-
-          VectorE.sub(this.velocity, force1);
-          VectorE.sub(ele.velocity, force2);
-
-          const v1 = Vector.collisionCalc(force1, force2, this.mass, ele.mass);
-          const v2 = Vector.collisionCalc(force2, force1, ele.mass, this.mass);
-
-          VectorE.add(this.velocity, v1);
-          VectorE.add(ele.velocity, v2);
-        }
-      }
-    }
+    const e = Math.min(bodyA.restitution, bodyB.restitution);
+    const impulse = Collisions.resolveCollisionBasic(
+      bodyA.linearVel,
+      bodyB.linearVel,
+      bodyA.invMass,
+      bodyB.invMass,
+      e,
+      normal
+    );
+    if (!impulse) return;
+    VectorE.sub(bodyA.linearVel, Vector.scale(impulse, bodyA.invMass));
+    VectorE.add(bodyB.linearVel, Vector.scale(impulse, bodyB.invMass));
   }
 }
-export { Particle };

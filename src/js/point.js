@@ -1,5 +1,5 @@
 import { Vector } from "./vector.js";
-class Point {
+export class Point {
   static toPosRate(pos0, pos1, rate) {
     return [pos0[0] * (1 - rate) + pos1[0] * rate, pos0[1] * (1 - rate) + pos1[1] * rate];
   }
@@ -20,14 +20,13 @@ class Point {
   }
 }
 
-const getQuadraticCurveTo = function (p0, p1, p2, t) {
+export const getQuadraticCurveTo = function (p0, p1, p2, t) {
   const x = p0[0] * (1 - t) * (1 - t) + 2 * p1[0] * (1 - t) * t + p2[0] * t * t;
   const y = p0[1] * (1 - t) * (1 - t) + 2 * p1[1] * (1 - t) * t + p2[1] * t * t;
   return [x, y];
 };
-const getQuadraticCurveToTangent = function (p0, p1, p2, t) {
+export const getQuadraticCurveToTangent = function (p0, p1, p2, t) {
   const x = 2 * t * (p0[0] - p1[0] * 2 + p2[0]) + 2 * (-p0[0] + p1[0]);
   const y = 2 * t * (p0[1] - p1[1] * 2 + p2[1]) + 2 * (-p0[1] + p1[1]);
   return [x, y];
 };
-export { getQuadraticCurveTo, getQuadraticCurveToTangent, Point };

@@ -92,12 +92,11 @@ function update() {
   ctx.restore();
 }
 update();
-let oldTime = Date.now();
-let animate = function () {
+let oldTime = 0;
+let animate = function (t) {
   requestAnimationFrame(animate);
-  let nowTime = Date.now();
-  let delta = (nowTime - oldTime) / 1000;
-  oldTime = nowTime;
+  let delta = (t - oldTime) / 1000;
+  oldTime = t;
   update();
 
   ctx.font = "bold 18px Noto Sans TC";
@@ -106,4 +105,4 @@ let animate = function () {
   ctx.fillStyle = "#ffffff";
   ctx.fillText((1 / delta).toFixed(1), 10, 10);
 };
-animate();
+requestAnimationFrame(animate);
