@@ -39,8 +39,8 @@ const handleResize = () => {
 };
 window.addEventListener("resize", debounce(handleResize));
 handleResize();
-canvas.addEventListener("click", (el) => {
-  const p = [el.pageX, el.pageY];
+canvas.addEventListener("click", (ev) => {
+  const p = [ev.offsetX, ev.offsetY];
   const r = 100;
   const range = new Rectangle(p[0] - r, p[1] - r, r * 2, r * 2);
   const query_points = qtree.query(range);

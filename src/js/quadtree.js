@@ -19,6 +19,9 @@ export class Rectangle {
       rect.y + rect.height < this.y
     );
   }
+  get center() {
+    return [this.x + this.width * 0.5, this.y + this.height * 0.5];
+  }
   get left() {
     return this.x;
   }

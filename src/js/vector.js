@@ -22,6 +22,12 @@ export class Vector {
   static sub(vector0, vector1) {
     return [vector0[0] - vector1[0], vector0[1] - vector1[1]];
   }
+  static mul(vector0, vector1) {
+    return [vector0[0] * vector1[0], vector0[1] * vector1[1]];
+  }
+  static div(vector0, vector1) {
+    return [vector0[0] / vector1[0], vector0[1] / vector1[1]];
+  }
   static projection(vector0, vector1) {
     var rate = Vector.dot(vector0, vector1) / Vector.dot(vector1, vector1);
     return [vector1[0] * rate, vector1[1] * rate];
@@ -31,6 +37,9 @@ export class Vector {
   }
   static scale(vector, scale) {
     return [vector[0] * scale, vector[1] * scale];
+  }
+  static divScale(vector, scale) {
+    return [vector[0] / scale, vector[1] / scale];
   }
   static collisionCalc(vector1, vector2, mass1, mass2) {
     return Vector.scale(
@@ -72,6 +81,11 @@ export class VectorE {
   static scale(vector, scale) {
     vector[0] *= scale;
     vector[1] *= scale;
+    return vector;
+  }
+  static divScale(vector, scale) {
+    vector[0] /= scale;
+    vector[1] /= scale;
     return vector;
   }
 }

@@ -25,6 +25,7 @@ module.exports = {
     "./particleCollision/js/main": "./src/particleCollision/index.js",
     "./quadTree/js/main": "./src/quadTree/index.js",
     "./particleCollision-quadTree/js/main": "./src/particleCollision-quadTree/index.js",
+    "./fluid/js/main": "./src/fluid/index.js",
   },
   output: {
     path: path.resolve(__dirname, "./dist/"),
@@ -87,6 +88,13 @@ module.exports = {
       filename: "particleCollision-quadTree/index.html",
       hash: true,
       chunks: ["./particleCollision-quadTree/js/main"],
+    }),
+    new HtmlWebpackPlugin({
+      title: "fluid",
+      template: "./src/fluid/index.html",
+      filename: "fluid/index.html",
+      hash: true,
+      chunks: ["./fluid/js/main"],
     }),
     new OptimizeCssAssetsWebpackPlugin(),
   ],

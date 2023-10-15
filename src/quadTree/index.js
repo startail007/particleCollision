@@ -7,15 +7,15 @@ cHeight = canvas.height;
 
 let mPos = [0, 0];
 let mBool = false;
-canvas.addEventListener("mousedown", function (el) {
+canvas.addEventListener("mousedown", function (ev) {
   mBool = true;
 });
-window.addEventListener("mouseup", function (el) {
+window.addEventListener("mouseup", function (ev) {
   mBool = false;
 });
-canvas.addEventListener("mousemove", function (el) {
-  mPos[0] = el.offsetX;
-  mPos[1] = el.offsetY;
+canvas.addEventListener("mousemove", function (ev) {
+  mPos[0] = ev.offsetX;
+  mPos[1] = ev.offsetY;
   if (mBool) {
     let point = [...mPos];
     points.push(point);
@@ -36,8 +36,8 @@ let qtree = new Quadtree(rect, 2, 4, 8);
 
 canvas.addEventListener("click", function (el) {
   //console.log(el);
-  mPos[0] = el.offsetX;
-  mPos[1] = el.offsetY;
+  mPos[0] = ev.offsetX;
+  mPos[1] = ev.offsetY;
   let point = [...mPos];
   points.push(point);
   qtree.insert({ key: points.length - 1, point: point });
