@@ -62,6 +62,15 @@ for (let i = 0; i < particleCount; i++) {
     new FluidParticle([cWidth * 0.5 + (x - w * 0.5 + 0.5) * spacing, cHeight * 0.5 + (y - h * 0.5 + 0.5) * spacing])
   );
 }
+const xN = Math.floor(cWidth / 10) + 1;
+const yN = Math.floor(cHeight / 10) + 1;
+const fieldPoints = [];
+for (let j = 0; j < yN; j++) {
+  fieldPoints[j] = [];
+  for (let i = 0; i < xN; i++) {
+    fieldPoints[j][i] = { pos: [i * 10, j * 10], density: 1, force: [0, 0] };
+  }
+}
 canvas.addEventListener("click", (ev) => {
   VectorE.set(mPos, [ev.offsetX, ev.offsetY]);
   const particleCount = 100;
@@ -164,48 +173,57 @@ const update = (delta) => {
   const radius = 30;
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, cWidth, cHeight);
-  qtree.clear();
-  for (let i = 0; i < particles.length; i++) {
-    const particle = particles[i];
-    qtree.insert({ key: i, point: particle.pos });
-  }
-  const list = [];
-  for (let i = 0; i < particles.length; i++) {
-    const particle = particles[i];
-    const range = new Rectangle(particle.pos[0] - radius, particle.pos[1] - radius, radius * 2, radius * 2);
-    list[i] = qtree
-      .query(range)
-      .filter((el) => Vector.distance(particles[el.key].pos, particle.pos) <= radius)
-      .map((el) => particles[el.key]);
-  }
-  for (let i = 0; i < particles.length; i++) {
-    const particle = particles[i];
-    //VectorE.add(particle.linearVel, Vector.scale(gravity, delta));
-    VectorE.set(particle.predictedPos, Vector.add(particle.pos, Vector.scale(particle.linearVel, delta)));
-  }
-  for (let i = 0; i < particles.length; i++) {
-    const query_particles = list[i];
-    particles[i].fieldDensity = calcDensity(particles[i].predictedPos, query_particles, radius);
-  }
-  for (let i = 0; i < particles.length; i++) {
-    const query_particles = list[i];
-    const particle = particles[i];
-    VectorE.scale(particle.linearVel, 0.99);
-    const propertyForce = calcPropertyForce(particle, query_particles, radius);
-    const propertyAcc = Vector.divScale(propertyForce, particle.fieldDensity);
-    VectorE.add(particle.linearVel, Vector.scale(propertyAcc, delta));
-  }
 
-  for (let i = 0; i < particles.length; i++) {
-    const particle = particles[i];
-    // particle.update(delta);
-    VectorE.add(particle.pos, Vector.scale(particle.linearVel, delta));
-    resolveCollision(particle, rect, collisionDamping);
+  for (let j = 0; j < yN; j++) {
+    for (let i = 0; i < xN; i++) {
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.rect(...Vector.sub(fieldPoints[j][i].pos, [1, 1]), 2, 2);
+      ctx.fill();
+    }
   }
-  for (let i = 0; i < particles.length; i++) {
-    const particle = particles[i];
-    particle.render(ctx);
-  }
+  // qtree.clear();
+  // for (let i = 0; i < particles.length; i++) {
+  //   const particle = particles[i];
+  //   qtree.insert({ key: i, point: particle.pos });
+  // }
+  // const list = [];
+  // for (let i = 0; i < particles.length; i++) {
+  //   const particle = particles[i];
+  //   const range = new Rectangle(particle.pos[0] - radius, particle.pos[1] - radius, radius * 2, radius * 2);
+  //   list[i] = qtree
+  //     .query(range)
+  //     .filter((el) => Vector.distance(particles[el.key].pos, particle.pos) <= radius)
+  //     .map((el) => particles[el.key]);
+  // }
+  // for (let i = 0; i < particles.length; i++) {
+  //   const particle = particles[i];
+  //   //VectorE.add(particle.linearVel, Vector.scale(gravity, delta));
+  //   VectorE.set(particle.predictedPos, Vector.add(particle.pos, Vector.scale(particle.linearVel, delta)));
+  // }
+  // for (let i = 0; i < particles.length; i++) {
+  //   const query_particles = list[i];
+  //   particles[i].fieldDensity = calcDensity(particles[i].predictedPos, query_particles, radius);
+  // }
+  // for (let i = 0; i < particles.length; i++) {
+  //   const query_particles = list[i];
+  //   const particle = particles[i];
+  //   VectorE.scale(particle.linearVel, 0.99);
+  //   const propertyForce = calcPropertyForce(particle, query_particles, radius);
+  //   const propertyAcc = Vector.divScale(propertyForce, particle.fieldDensity);
+  //   VectorE.add(particle.linearVel, Vector.scale(propertyAcc, delta));
+  // }
+
+  // for (let i = 0; i < particles.length; i++) {
+  //   const particle = particles[i];
+  //   // particle.update(delta);
+  //   VectorE.add(particle.pos, Vector.scale(particle.linearVel, delta));
+  //   resolveCollision(particle, rect, collisionDamping);
+  // }
+  // for (let i = 0; i < particles.length; i++) {
+  //   const particle = particles[i];
+  //   particle.render(ctx);
+  // }
   ctx.strokeStyle = "#ff0000";
   ctx.beginPath();
   ctx.arc(...mPos, radius, 0, 2 * Math.PI);
