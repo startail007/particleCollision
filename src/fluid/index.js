@@ -47,12 +47,12 @@ const cHeight = canvas.height;
 const rect = new Rectangle(0, 0, cWidth, cHeight);
 const qtree = new Quadtree(rect, 10);
 const particles = [];
-const particleCount = 400;
+const particleCount = 900;
 const collisionDamping = 1;
-const gravity = [0, 9.81 * 10];
-const w = 20;
+const gravity = [0, 9.81 * 20];
+const w = 30;
 const h = Math.ceil(particleCount / w);
-const spacing = 8;
+const spacing = 6;
 for (let i = 0; i < particleCount; i++) {
   //particles[i] = new FluidParticle([Math.random() * cWidth, Math.random() * cHeight]);
   // particles[i].linearVel = [200 - Math.random() * 400, 200 - Math.random() * 400];
@@ -110,11 +110,12 @@ const smoothingKernel = (radius, dist) => {
 const calcDensity = (pos, particles, smoothingRadius) => {
   let density = 0;
   const mass = 1;
-  particles.forEach((particle) => {
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
     const dist = Vector.distance(particle.pos, pos);
     const influence = smoothingKernel(smoothingRadius, dist);
     density += mass * influence;
-  });
+  }
   return density;
 };
 // const smoothingKernelDerivative = (dist, radius) => {
@@ -132,8 +133,8 @@ const getRandomDir = () => {
   const angle = Math.random() * 2 * Math.PI;
   return [Math.cos(angle), Math.sin(angle)];
 };
-const targetDensity = 0.012;
-const pressureMul = 40;
+const targetDensity = 0.0025;
+const pressureMul = 30000;
 const convertDensityToPressure = (density) => {
   //return density * 9.81 * 100;
   const densityError = density - targetDensity;
@@ -142,60 +143,69 @@ const convertDensityToPressure = (density) => {
 };
 const calcPropertyForce = (particleA, particles, smoothingRadius) => {
   const propertyForce = Vector.zero();
-  const mass = smoothingRadius * smoothingRadius * Math.PI;
-  particles.forEach((particle) => {
-    if (particle === particleA) return;
+  // const mass = smoothingRadius * smoothingRadius * Math.PI;
+  const mass = 1;
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
+    if (particle === particleA) continue;
     const v = Vector.sub(particle.pos, particleA.pos);
     const dist = Vector.length(v);
-    if (!dist) return;
+    if (!dist) continue;
     const dir = dist == 0 ? getRandomDir() : Vector.divScale(v, dist);
     const slop = smoothingKernelDerivative(dist, smoothingRadius);
     let density = particle.fieldDensity;
-    if (!density) return;
+    if (!density) continue;
     const d = (convertDensityToPressure(density) + convertDensityToPressure(particleA.fieldDensity)) * 0.5;
     VectorE.add(propertyForce, Vector.scale(dir, (d * slop * mass) / density));
-  });
+  }
   return propertyForce;
 };
 const update = (delta) => {
+  const radius = 30;
   ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, cWidth, cHeight);
   qtree.clear();
-  particles.forEach((particle, i) => {
-    particle.active = false;
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
     qtree.insert({ key: i, point: particle.pos });
-  });
-  const radius = 30;
-
-  const list = particles.map((particle, i) => {
+  }
+  const list = [];
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
     const range = new Rectangle(particle.pos[0] - radius, particle.pos[1] - radius, radius * 2, radius * 2);
-    return qtree
+    list[i] = qtree
       .query(range)
       .filter((el) => Vector.distance(particles[el.key].pos, particle.pos) <= radius)
       .map((el) => particles[el.key]);
-  });
-  particles.forEach((particle) => {
-    VectorE.add(particle.linearVel, Vector.scale(gravity, delta));
+  }
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
+    //VectorE.add(particle.linearVel, Vector.scale(gravity, delta));
     VectorE.set(particle.predictedPos, Vector.add(particle.pos, Vector.scale(particle.linearVel, delta)));
-  });
-  list.forEach((query_particles, i) => {
+  }
+  for (let i = 0; i < particles.length; i++) {
+    const query_particles = list[i];
     particles[i].fieldDensity = calcDensity(particles[i].predictedPos, query_particles, radius);
-  });
-  list.forEach((query_particles, i) => {
+  }
+  for (let i = 0; i < particles.length; i++) {
+    const query_particles = list[i];
     const particle = particles[i];
     VectorE.scale(particle.linearVel, 0.99);
     const propertyForce = calcPropertyForce(particle, query_particles, radius);
     const propertyAcc = Vector.divScale(propertyForce, particle.fieldDensity);
     VectorE.add(particle.linearVel, Vector.scale(propertyAcc, delta));
-  });
+  }
 
-  particles.forEach((particle) => {
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
     // particle.update(delta);
     VectorE.add(particle.pos, Vector.scale(particle.linearVel, delta));
-  });
-
-  particles.forEach((particle) => resolveCollision(particle, rect, collisionDamping));
-  particles.forEach((particle) => particle.render(ctx));
+    resolveCollision(particle, rect, collisionDamping);
+  }
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
+    particle.render(ctx);
+  }
   ctx.strokeStyle = "#ff0000";
   ctx.beginPath();
   ctx.arc(...mPos, radius, 0, 2 * Math.PI);
@@ -214,5 +224,6 @@ const animate = () => {
   ctx.textBaseline = "hanging";
   ctx.fillStyle = "#ffffff";
   ctx.fillText((1 / delta).toFixed(1), 10, 10);
+  ctx.fillText(particles.length, 10, 30);
 };
 requestAnimationFrame(animate);
