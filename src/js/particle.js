@@ -26,7 +26,7 @@ export class Particle {
     ctx.arc(...this.pos, this.radius, 0, 2 * Math.PI);
     ctx.fill();
   }
-  static constraint(particles, p0, p1, wellRestitution) {
+  static constraint(particles, p0, p1, wallRestitution) {
     const v = Vector.sub(p1, p0);
     const normal = Vector.normal(Vector.normalize(v));
     particles.forEach((particle) => {
@@ -39,7 +39,7 @@ export class Particle {
           Vector.zero(),
           particle.invMass,
           0,
-          Math.min(particle.restitution, wellRestitution),
+          Math.min(particle.restitution, wallRestitution),
           normal
         );
         if (!impulse) return;

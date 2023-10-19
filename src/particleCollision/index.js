@@ -61,11 +61,11 @@ function update(delta) {
       Particle.collide(particleA, particleB);
     }
   }
-  const wellRestitution = 1;
-  Particle.constraint(particles, [cWidth, 0], [0, 0], wellRestitution);
-  Particle.constraint(particles, [0, cHeight], [cWidth, cHeight], wellRestitution);
-  Particle.constraint(particles, [0, 0], [0, cHeight], wellRestitution);
-  Particle.constraint(particles, [cWidth, cHeight], [cWidth, 0], wellRestitution);
+  const wallRestitution = 1;
+  Particle.constraint(particles, [cWidth, 0], [0, 0], wallRestitution);
+  Particle.constraint(particles, [0, cHeight], [cWidth, cHeight], wallRestitution);
+  Particle.constraint(particles, [0, 0], [0, cHeight], wallRestitution);
+  Particle.constraint(particles, [cWidth, cHeight], [cWidth, 0], wallRestitution);
   /*particles.forEach((ele, i, ary) => {
     ele.collisionCheck(ary);
   });

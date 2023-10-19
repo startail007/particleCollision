@@ -61,6 +61,18 @@ export class Vector {
   static negate(vector) {
     return [-vector[0], -vector[1]];
   }
+  static floor(vector) {
+    return [Math.floor(vector[0]), Math.floor(vector[1])];
+  }
+  static ceil(vector) {
+    return [Math.ceil(vector[0]), Math.ceil(vector[1])];
+  }
+  static round(vector) {
+    return [Math.round(vector[0]), Math.round(vector[1])];
+  }
+  static mix(vector0, vector1, rate) {
+    return Vector.add(Vector.scale(vector0, 1 - rate), Vector.scale(vector1, rate));
+  }
 }
 export class VectorE {
   static set(vector0, vector1) {
